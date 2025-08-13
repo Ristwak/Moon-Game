@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "ShapeScape.sln"
+    "dotnet.defaultSolution": "Moon Game.sln"
 }
