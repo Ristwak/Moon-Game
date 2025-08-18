@@ -156,6 +156,14 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(false);
     }
 
+    public void OnBack()
+    {
+        aboutPanel.SetActive(false);
+        startPanel.SetActive(true);
+        gameUI.SetActive(false);
+        gameOverPanel.SetActive(false);
+    }
+
     // Restart Game or Reload Scene
     public void RestartGame()
     {
