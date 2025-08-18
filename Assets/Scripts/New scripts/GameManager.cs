@@ -1,7 +1,8 @@
 using UnityEngine;
-using TMPro; // TextMeshPro for UI
+using TMPro;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events; // For scene reloading
+using UnityEngine.Events;
+using System;  // For scene reloading
 
 public class GameManager : MonoBehaviour
 {
@@ -15,8 +16,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI collectedText;  // e.g. "3 / 10"
     public TextMeshProUGUI timeText;       // e.g. "01:23"
     public TextMeshProUGUI resultText;     // e.g. "You Win!" / "Time Up!" (optional)
-    public GameObject gamePanel;
     public GameObject gameOverPanel;       // Reference to the Game Over Panel
+    public GameObject aboutPanel;
+    public GameObject startPanel;          // Reference to the Game Start Panel
+    public GameObject gameUI;              // Reference to the gameplay UI (collectedText, timeText, etc.)
 
     [Header("Events")]
     public UnityEvent onVictory;
@@ -35,14 +38,27 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        gamePanel.SetActive(true);
+        // Initially deactivate gameplay elements
+        if (gameUI) gameUI.SetActive(false);
+        if (aboutPanel) aboutPanel.SetActive(false);
+        if (gameOverPanel) gameOverPanel.SetActive(false);
+        if (startPanel) startPanel.SetActive(true); // Show start panel initially
 
+        // Auto-detect total if not set
         if (totalToCollect <= 0)
         {
             var items = FindObjectsOfType<CollectAfterGrab>(true);
             totalToCollect = items.Length;
         }
+    }
 
+    public void StartGame()
+    {
+        // Hide the start panel and activate the game UI
+        if (startPanel) startPanel.SetActive(false);
+        if (gameUI) gameUI.SetActive(true);
+
+        // Start the game
         CollectedCount = 0;
         _timeRemaining = Mathf.Max(0f, timeLimit);
         GameRunning = true;
@@ -50,7 +66,6 @@ public class GameManager : MonoBehaviour
         UpdateCollectedUI();
         UpdateTimeUI();
         if (resultText) resultText.gameObject.SetActive(false);
-        if (gameOverPanel) gameOverPanel.SetActive(false); // Hide panel initially
     }
 
     void Update()
@@ -94,8 +109,7 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel)
         {
-            gamePanel.SetActive(false);
-            gameOverPanel.SetActive(true); // Show Game Over Panel
+            gameOverPanel.SetActive(true);
         }
 
         onVictory?.Invoke();
@@ -113,8 +127,7 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel)
         {
-            gamePanel.SetActive(false);
-            gameOverPanel.SetActive(true); // Show Game Over Panel
+            gameOverPanel.SetActive(true);
         }
 
         onDefeat?.Invoke();
@@ -135,9 +148,23 @@ public class GameManager : MonoBehaviour
         timeText.text = $"{m:00}:{s:00}";
     }
 
+    public void AboutGame()
+    {
+        aboutPanel.SetActive(true);
+        startPanel.SetActive(false);
+        gameUI.SetActive(false);
+        gameOverPanel.SetActive(false);
+    }
+
     // Restart Game or Reload Scene
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload current scene
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Quitting Game");
+        Application.Quit();
     }
 }
