@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Moon Game.sln"
+    "dotnet.defaultSolution": "MoonFrontier.sln"
 }

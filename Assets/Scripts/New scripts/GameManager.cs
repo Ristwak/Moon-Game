@@ -1,21 +1,22 @@
 using UnityEngine;
 using TMPro; // TextMeshPro for UI
-using UnityEngine.Events;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events; // For scene reloading
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
     [Header("Game Rules")]
-    [Tooltip("If 0 or less, will auto-detect how many CollectAfterGrab items exist in the scene at Start.")]
     public int totalToCollect = 0;
-    [Tooltip("Seconds the player has to collect all items.")]
     public float timeLimit = 90f;
 
     [Header("UI")]
     public TextMeshProUGUI collectedText;  // e.g. "3 / 10"
     public TextMeshProUGUI timeText;       // e.g. "01:23"
     public TextMeshProUGUI resultText;     // e.g. "You Win!" / "Time Up!" (optional)
+    public GameObject gamePanel;
+    public GameObject gameOverPanel;       // Reference to the Game Over Panel
 
     [Header("Events")]
     public UnityEvent onVictory;
@@ -34,10 +35,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Auto-detect total if not set
+        gamePanel.SetActive(true);
+
         if (totalToCollect <= 0)
         {
-            var items = FindObjectsOfType<CollectAfterGrab>(true); // include inactive
+            var items = FindObjectsOfType<CollectAfterGrab>(true);
             totalToCollect = items.Length;
         }
 
@@ -48,6 +50,7 @@ public class GameManager : MonoBehaviour
         UpdateCollectedUI();
         UpdateTimeUI();
         if (resultText) resultText.gameObject.SetActive(false);
+        if (gameOverPanel) gameOverPanel.SetActive(false); // Hide panel initially
     }
 
     void Update()
@@ -59,10 +62,7 @@ public class GameManager : MonoBehaviour
         {
             _timeRemaining = 0f;
             UpdateTimeUI();
-            // If time ran out and not all collected -> defeat
             if (CollectedCount < totalToCollect) EndDefeat();
-            // (If player collected last item exactly as time hit zero,
-            // AddCollected() will already have triggered victory.)
             return;
         }
 
@@ -74,7 +74,6 @@ public class GameManager : MonoBehaviour
         if (!GameRunning) return;
 
         CollectedCount++;
-        // Debug.Log($"Collected: {itemId} | Total: {CollectedCount}/{totalToCollect}");
         UpdateCollectedUI();
 
         if (CollectedCount >= totalToCollect)
@@ -92,8 +91,14 @@ public class GameManager : MonoBehaviour
             resultText.text = "You Win!";
             resultText.gameObject.SetActive(true);
         }
+
+        if (gameOverPanel)
+        {
+            gamePanel.SetActive(false);
+            gameOverPanel.SetActive(true); // Show Game Over Panel
+        }
+
         onVictory?.Invoke();
-        // TODO: load next scene, show summary, etc.
     }
 
     void EndDefeat()
@@ -105,8 +110,14 @@ public class GameManager : MonoBehaviour
             resultText.text = "Time Up!";
             resultText.gameObject.SetActive(true);
         }
+
+        if (gameOverPanel)
+        {
+            gamePanel.SetActive(false);
+            gameOverPanel.SetActive(true); // Show Game Over Panel
+        }
+
         onDefeat?.Invoke();
-        // TODO: restart, show retry UI, etc.
     }
 
     void UpdateCollectedUI()
@@ -122,5 +133,11 @@ public class GameManager : MonoBehaviour
         int m = secs / 60;
         int s = secs % 60;
         timeText.text = $"{m:00}:{s:00}";
+    }
+
+    // Restart Game or Reload Scene
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload current scene
     }
 }
