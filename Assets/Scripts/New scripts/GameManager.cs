@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [Header("Player Controls")]
+    public GameObject gestureDetection; // Drag your GestureDetection script here
+
     [Header("Game Rules")]
     public int totalToCollect = 0;
     public float timeLimit = 90f;
@@ -44,6 +47,9 @@ public class GameManager : MonoBehaviour
         if (gameOverPanel) gameOverPanel.SetActive(false);
         if (startPanel) startPanel.SetActive(true); // Show start panel initially
 
+        // Disable player controls while in menus
+        if (gestureDetection) gestureDetection.SetActive(false);
+
         // Auto-detect total if not set
         if (totalToCollect <= 0)
         {
@@ -54,11 +60,13 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        // Hide the start panel and activate the game UI
         if (startPanel) startPanel.SetActive(false);
+        if (aboutPanel) aboutPanel.SetActive(false);
         if (gameUI) gameUI.SetActive(true);
 
-        // Start the game
+        // Enable player controls
+        if (gestureDetection) gestureDetection.SetActive(true);
+
         CollectedCount = 0;
         _timeRemaining = Mathf.Max(0f, timeLimit);
         GameRunning = true;
@@ -154,6 +162,9 @@ public class GameManager : MonoBehaviour
         startPanel.SetActive(false);
         gameUI.SetActive(false);
         gameOverPanel.SetActive(false);
+
+        // Disable player controls
+        if (gestureDetection) gestureDetection.SetActive(false);
     }
 
     public void OnBack()
@@ -162,6 +173,9 @@ public class GameManager : MonoBehaviour
         startPanel.SetActive(true);
         gameUI.SetActive(false);
         gameOverPanel.SetActive(false);
+
+        // Disable player controls until StartGame is pressed
+        if (gestureDetection) gestureDetection.SetActive(false);
     }
 
     // Restart Game or Reload Scene
