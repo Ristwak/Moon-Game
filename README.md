@@ -54,7 +54,7 @@ Players step onto the **lunar surface**, collect essential resources, and intera
 ### Setup
 1. Clone the repository  
    ```bash
-   git clone https://github.com/your-username/moonfrontier-vr.git
+   git clone https://github.com/Ristwak/moonfrontier-vr.git
 2. Open the project in Unity Hub
 
 3. Switch Build Target to Android (for Quest) or PCVR (for SteamVR)
