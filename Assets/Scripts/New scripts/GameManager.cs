@@ -117,6 +117,7 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel)
         {
+            gameUI.SetActive(false);
             gameOverPanel.SetActive(true);
         }
 
@@ -135,6 +136,7 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel)
         {
+            gameUI.SetActive(false);
             gameOverPanel.SetActive(true);
         }
 

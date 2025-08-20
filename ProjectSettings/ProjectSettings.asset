@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: HomiLab
-  productName: Moon Game Ris
+  productName: MoonFrontier
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -142,6 +142,8 @@ PlayerSettings:
   bundleVersion: 0.2
   preloadedAssets:
   - {fileID: 0}
+  - {fileID: 1496455751253536747, guid: 85bd5d3d334d7364686984a3db7f4af0, type: 2}
+  - {fileID: 8765085938191651411, guid: 7019a03b4550a80448267aa4b3667639, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -162,7 +164,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.HomiLab.MoonGameRis
+    Android: com.HomiLab.MoonFrontier
   buildNumber:
     Standalone: 0
     VisionOS: 0
